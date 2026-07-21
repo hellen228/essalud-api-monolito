@@ -14,8 +14,8 @@
     <groupId>com.essalud</groupId>
     <artifactId>essalud-api-monolito</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>essalud-servicios</name>
-    <description>Lab 7 - Implementacion de Servicios REST basados en BDD - EsSalud</description>
+    <name>essalud-api-monolito</name>
+    <description>Implementacion de Servicios REST basados en BDD - EsSalud</description>
 
     <properties>
         <java.version>17</java.version>
