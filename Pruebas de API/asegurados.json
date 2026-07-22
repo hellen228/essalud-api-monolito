@@ -1,0 +1,337 @@
+{
+	"info": {
+		"name": "Asegurados",
+		"description": "Colección BDD para el módulo Asegurado"
+	},
+	"item": [
+		{
+			"name": "Registrar solicitud de afiliación",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Given un DNI válido\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 400]);",
+							"});",
+							"",
+							"pm.test(\"When se registra una solicitud de afiliación POST /asegurados/solicitud\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Then el servicio responde HTTP 201 con los datos de la solicitud\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.dni).to.eql(\"12345678\");",
+							"    pm.expect(jsonData.estado).to.eql(\"PENDIENTE\");",
+							"    pm.expect(jsonData.fechaSolicitud).to.not.be.null;",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"dni\": \"12345678\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/asegurados/solicitud",
+					"host": ["{{baseUrl}}"],
+					"path": ["asegurados", "solicitud"]
+				}
+			}
+		},
+		{
+			"name": "Validar identidad contra RENIEC",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Given un DNI registrado en RENIEC\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+							"});",
+							"",
+							"pm.test(\"When se valida identidad POST /asegurados/validar-identidad\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Then el servicio responde HTTP 200 con resultado de validación\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.dni).to.eql(\"12345678\");",
+							"    pm.expect(jsonData.valido).to.be.true;",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"dni\": \"12345678\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/asegurados/validar-identidad",
+					"host": ["{{baseUrl}}"],
+					"path": ["asegurados", "validar-identidad"]
+				}
+			}
+		},
+		{
+			"name": "Validar identidad contra RENIEC - DNI inválido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Given un DNI no registrado en RENIEC\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+							"});",
+							"",
+							"pm.test(\"When se valida identidad POST /asegurados/validar-identidad\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Then el servicio responde HTTP 200 con valido=false\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.dni).to.eql(\"00000000\");",
+							"    pm.expect(jsonData.valido).to.be.false;",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"dni\": \"00000000\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/asegurados/validar-identidad",
+					"host": ["{{baseUrl}}"],
+					"path": ["asegurados", "validar-identidad"]
+				}
+			}
+		},
+		{
+			"name": "Verificar requisitos legales",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Given un DNI de solicitante\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+							"});",
+							"",
+							"pm.test(\"When se verifican requisitos POST /asegurados/verificar-requisitos\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Then el servicio responde HTTP 200 con resultado\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.dni).to.eql(\"12345678\");",
+							"    pm.expect(jsonData.cumpleRequisitos).to.be.true;",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"dni\": \"12345678\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/asegurados/verificar-requisitos",
+					"host": ["{{baseUrl}}"],
+					"path": ["asegurados", "verificar-requisitos"]
+				}
+			}
+		},
+		{
+			"name": "Crear asegurado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Given un DNI válido no registrado previamente\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 400, 409]);",
+							"});",
+							"",
+							"pm.test(\"When se crea asegurado POST /asegurados\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Then el servicio responde HTTP 201 con datos del asegurado\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.dni).to.eql(\"12345678\");",
+							"    pm.expect(jsonData.nombres).to.eql(\"Juan Carlos\");",
+							"    pm.expect(jsonData.apellidos).to.eql(\"Perez Garcia\");",
+							"    pm.expect(jsonData.estadoAfiliacion).to.eql(\"PENDIENTE\");",
+							"    pm.expect(jsonData.id).to.not.be.null;",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"dni\": \"12345678\",\n  \"nombres\": \"Juan Carlos\",\n  \"apellidos\": \"Perez Garcia\",\n  \"fechaNacimiento\": \"1990-05-15\",\n  \"sexo\": \"M\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/asegurados",
+					"host": ["{{baseUrl}}"],
+					"path": ["asegurados"]
+				}
+			}
+		},
+		{
+			"name": "Consultar datos de asegurado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Given existe un asegurado registrado con DNI 12345678\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+							"});",
+							"",
+							"pm.test(\"When se consulta GET /asegurados/{dni}\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Then el servicio responde HTTP 200 con los datos del asegurado\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.dni).to.eql(\"12345678\");",
+							"    pm.expect(jsonData.nombres).to.eql(\"Juan Carlos\");",
+							"    pm.expect(jsonData.estadoAfiliacion).to.not.be.null;",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/asegurados/12345678",
+					"host": ["{{baseUrl}}"],
+					"path": ["asegurados", "12345678"]
+				}
+			}
+		},
+		{
+			"name": "Consultar datos de asegurado - no encontrado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Given NO existe un asegurado con DNI 99999999\", function () {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"});",
+							"",
+							"pm.test(\"When se consulta GET /asegurados/{dni}\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Then el servicio responde HTTP 404\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.not.be.null;",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/asegurados/99999999",
+					"host": ["{{baseUrl}}"],
+					"path": ["asegurados", "99999999"]
+				}
+			}
+		},
+		{
+			"name": "Actualizar estado de afiliación",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Given existe un asegurado con id 1\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+							"});",
+							"",
+							"pm.test(\"When se actualiza estado PUT /asegurados/{id}/estado\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Then el servicio responde HTTP 200 con estado actualizado\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.estadoAfiliacion).to.eql(\"ACTIVO\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"estado\": \"ACTIVO\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/asegurados/1/estado",
+					"host": ["{{baseUrl}}"],
+					"path": ["asegurados", "1", "estado"]
+				}
+			}
+		}
+	]
+}
