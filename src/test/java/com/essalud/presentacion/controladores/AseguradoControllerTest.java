@@ -52,7 +52,7 @@ class AseguradoControllerTest {
             when(aseguradoServicio.registrarSolicitudAfiliacion("12345678"))
                     .thenReturn(new SolicitudAfiliacion("12345678"));
 
-            mockMvc.perform(post("/asegurados/solicitud")
+            mockMvc.perform(post("/api/asegurados/solicitud")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"dni\":\"12345678\"}"))
                     .andExpect(status().isCreated())
@@ -62,7 +62,7 @@ class AseguradoControllerTest {
 
         @Test
         void shouldReturn400WhenDniIsMissing() throws Exception {
-            mockMvc.perform(post("/asegurados/solicitud")
+            mockMvc.perform(post("/api/asegurados/solicitud")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{}"))
                     .andExpect(status().isBadRequest());
@@ -76,7 +76,7 @@ class AseguradoControllerTest {
         void shouldReturnTrueWhenDniIsValid() throws Exception {
             when(aseguradoServicio.validarIdentidadReniec("12345678")).thenReturn(true);
 
-            mockMvc.perform(post("/asegurados/validar-identidad")
+            mockMvc.perform(post("/api/asegurados/validar-identidad")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"dni\":\"12345678\"}"))
                     .andExpect(status().isOk())
@@ -88,7 +88,7 @@ class AseguradoControllerTest {
         void shouldReturnFalseWhenDniIsInvalid() throws Exception {
             when(aseguradoServicio.validarIdentidadReniec("00000000")).thenReturn(false);
 
-            mockMvc.perform(post("/asegurados/validar-identidad")
+            mockMvc.perform(post("/api/asegurados/validar-identidad")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"dni\":\"00000000\"}"))
                     .andExpect(status().isOk())
@@ -103,7 +103,7 @@ class AseguradoControllerTest {
         void shouldReturnRequirementsStatus() throws Exception {
             when(aseguradoServicio.verificarRequisitosLegales("12345678")).thenReturn(true);
 
-            mockMvc.perform(post("/asegurados/verificar-requisitos")
+            mockMvc.perform(post("/api/asegurados/verificar-requisitos")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"dni\":\"12345678\"}"))
                     .andExpect(status().isOk())
@@ -131,7 +131,7 @@ class AseguradoControllerTest {
                     "fechaNacimiento", "1990-05-15",
                     "sexo", "M"));
 
-            mockMvc.perform(post("/asegurados")
+            mockMvc.perform(post("/api/asegurados")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body))
                     .andExpect(status().isCreated())
@@ -150,7 +150,7 @@ class AseguradoControllerTest {
             asegurado.setId(1L);
             when(aseguradoServicio.obtenerDatosAsegurado("12345678")).thenReturn(asegurado);
 
-            mockMvc.perform(get("/asegurados/12345678"))
+            mockMvc.perform(get("/api/asegurados/12345678"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.dni").value("12345678"))
                     .andExpect(jsonPath("$.nombres").value("Juan"));
@@ -161,7 +161,7 @@ class AseguradoControllerTest {
             when(aseguradoServicio.obtenerDatosAsegurado("99999999"))
                     .thenThrow(new IllegalArgumentException("No se encontró asegurado con DNI 99999999"));
 
-            mockMvc.perform(get("/asegurados/99999999"))
+            mockMvc.perform(get("/api/asegurados/99999999"))
                     .andExpect(status().isNotFound());
         }
     }
@@ -178,7 +178,7 @@ class AseguradoControllerTest {
             when(aseguradoServicio.actualizarEstadoAfiliacion(1L, EstadoAfiliacion.ACTIVO))
                     .thenReturn(asegurado);
 
-            mockMvc.perform(put("/asegurados/1/estado")
+            mockMvc.perform(put("/api/asegurados/1/estado")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"estado\":\"ACTIVO\"}"))
                     .andExpect(status().isOk())
