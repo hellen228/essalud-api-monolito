@@ -1,0 +1,47 @@
+{
+  "info": {
+    "_postman_id": "9b15908c-9e80-4d2b-a0f4-42068206639c",
+    "name": "Essalud",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56797337",
+    "_collection_link": "https://go.postman.co/collection/56797337-9b15908c-9e80-4d2b-a0f4-42068206639c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Generar_prescripcion_medica",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "adfadfa"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "fasdfa",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "asda",
+          "host": [
+            "asda"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
