@@ -39,4 +39,9 @@ public class AdmisionController {
     public ResponseEntity<List<Admision> > listarPorAsegurado(@PathVariable Integer aseguradoId) {
         return ResponseEntity.ok(admisionServicio.listarPorAsegurado(aseguradoId));
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> manejarRechazoDeNegocio(IllegalStateException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

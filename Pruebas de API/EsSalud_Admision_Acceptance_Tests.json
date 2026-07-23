@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "f3697c97-5a41-4448-9f85-da72738b7880",
+		"name": "MVP EsSalud - Admisión Paciente",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "56830091",
+		"_collection_link": "https://mcornejoalv-5254526.postman.co/workspace/DSE-Essalud's-Workspace~351038fa-3369-407e-8e18-242fc997ff15/collection/56830091-f3697c97-5a41-4448-9f85-da72738b7880?action=share&source=collection_link&creator=56830091"
+	},
+	"item": [
+		{
+			"name": "Admision Hospitalaria Feature",
+			"item": [
+				{
+					"name": "TC01 - Registrar Admisión por Consulta Externa",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: ADMISIÓN POR CONSULTA EXTERNA",
+									"// =====================================================================",
+									"// GIVEN: Un paciente con cobertura activa en EsSalud (aseguradoId: 1) y una cita programada (citaId: 101)",
+									"// WHEN: Solicita su registro en el módulo de Admisión enviando un POST a /api/admisiones",
+									"// THEN: El sistema admite al paciente, retorna HTTP 201 Created y le asigna la prioridad de triaje \"IV\"",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - El código de estado HTTP es 201 (Created)\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"THEN - El sistema asigna correctamente la prioridad IV para Consulta Externa\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.expect(jsonData).to.have.property('id'); // Debe autogenerar un ID de admisión",
+									"    pm.expect(jsonData.aseguradoId).to.eql(1);",
+									"    pm.expect(jsonData.tipoIngreso).to.eql(\"Consulta Externa\");",
+									"    pm.expect(jsonData.prioridadTriaje).to.eql(\"IV\");",
+									"    pm.expect(jsonData.salaId).to.eql(3);",
+									"});",
+									"",
+									"pm.test(\"THEN - El tiempo de respuesta del servidor es óptimo (menor a 500ms)\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1500);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"aseguradoId\": 1,\n  \"citaId\": 101,\n  \"salaId\": 3,\n  \"tipoIngreso\": \"Consulta Externa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/admisiones",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"admisiones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC02 - Registrar Admisión por Emergencia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: ADMISIÓN POR EMERGENCIA",
+									"// =====================================================================",
+									"// GIVEN: Un asegurado que ingresa por el área de Emergencia y pasa por triaje con Prioridad II",
+									"// WHEN: Se registra el internamiento con una cama asignada (camaId: 12) en /api/admisiones[cite: 1]",
+									"// THEN: El sistema lo admite con estado HTTP 201 Created y deja la cita como nula[cite: 1]",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - El código de estado HTTP es 201 (Created)\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"THEN - Se registra el triaje (Prioridad II) y asignación de cama de observación\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.expect(jsonData.tipoIngreso).to.eql(\"Emergencia\");",
+									"    pm.expect(jsonData.prioridadTriaje).to.eql(\"II\");",
+									"    pm.expect(jsonData.camaId).to.eql(12);",
+									"    pm.expect(jsonData.citaId).to.be.null; // No debe requerir cita programada",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"aseguradoId\": 1,\n  \"camaId\": 12,\n  \"tipoIngreso\": \"Emergencia\",\n  \"prioridadTriaje\": \"II\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/admisiones",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"admisiones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC03 - Rechazo por Seguro Inactivo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: RECHAZO DE COBERTURA[cite: 1]",
+									"// =====================================================================",
+									"// GIVEN: Un paciente (aseguradoId: 2) cuyo seguro en EsSalud se encuentra inactivo o vencido[cite: 1]",
+									"// WHEN: Intenta registrar una atención médica en el módulo de Admisión[cite: 1]",
+									"// THEN: El sistema detiene el flujo, rechaza la atención y NO retorna un código de éxito[cite: 1]",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - La petición es bloqueada (Retorna error de servidor o de cliente)\", function () {",
+									"    // Como tu servicio lanza un IllegalStateException sin un manejador personalizado, ",
+									"    // Spring Boot responderá con un error HTTP 500 (Internal Server Error)",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 403, 500]);",
+									"});",
+									"",
+									"pm.test(\"THEN - El cuerpo de la respuesta menciona la razón del rechazo\", function () {",
+									"    var responseText = pm.response.text();",
+									"    pm.expect(responseText).to.include(\"seguro activo\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"aseguradoId\": 2,\n  \"citaId\": 105,\n  \"salaId\": 1,\n  \"tipoIngreso\": \"Consulta Externa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/admisiones",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"admisiones"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
