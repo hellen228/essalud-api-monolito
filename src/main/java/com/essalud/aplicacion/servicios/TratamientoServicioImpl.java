@@ -5,8 +5,6 @@ import com.essalud.dominio.tratamiento.repositorio.IRecetaRepositorio;
 import com.essalud.presentacion.dto.EmitirRecetaDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class TratamientoServicioImpl {
 
@@ -17,15 +15,14 @@ public class TratamientoServicioImpl {
     }
 
     public Receta emitirReceta(EmitirRecetaDTO dto) {
-        String idGenerado = "REC-" + UUID.randomUUID().toString().substring(0, 8);
-        
-        // Creamos el modelo asignando el estado "Pendiente" exigido en la feature
-        Receta nuevaReceta = new Receta(
-            idGenerado,
-            dto.getDiagnosticoId(),
-            dto.getMedicamento(),
-            "Pendiente"
-        );
+        Receta nuevaReceta = new Receta();
+        // El ID lo genera PostgreSQL automáticamente por el SERIAL
+        nuevaReceta.setPlanTerapeuticoId(dto.getPlanTerapeuticoId());
+        nuevaReceta.setMedicamentoId(dto.getMedicamentoId());
+        nuevaReceta.setDosis(dto.getDosis() != null ? dto.getDosis() : "1 tableta");
+        nuevaReceta.setFrecuencia(dto.getFrecuencia() != null ? dto.getFrecuencia() : "Cada 8 horas");
+        nuevaReceta.setDuracion(dto.getDuracion() != null ? dto.getDuracion() : "5 dias");
+        nuevaReceta.setEstadoDispensacion("Pendiente"); // Valor por defecto
 
         return recetaRepositorio.guardar(nuevaReceta);
     }

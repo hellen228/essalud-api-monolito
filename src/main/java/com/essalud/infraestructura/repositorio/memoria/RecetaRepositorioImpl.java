@@ -1,23 +1,22 @@
-package com.essalud.infraestructura.repositorio.jpa; // O en la carpeta de persistencia real
+package com.essalud.infraestructura.repositorio.memoria;
 
 import com.essalud.dominio.tratamiento.modelo.Receta;
 import com.essalud.dominio.tratamiento.repositorio.IRecetaRepositorio;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Repository;
 
-@Repository
-@Primary // Hace que Spring use esta implementación en lugar de la versión en memoria
-public class RecetaRepositorioImplJpa implements IRecetaRepositorio {
+import java.util.HashMap;
+import java.util.Map;
 
-    private final RecetaSpringDataRepository jpaRepository;
-
-    public RecetaRepositorioImplJpa(RecetaSpringDataRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
-    }
+// Remueve o comenta @Repository para no usar memoria
+public class RecetaRepositorioImpl implements IRecetaRepositorio {
+    
+    private final Map<Integer, Receta> dbMemoria = new HashMap<>(); 
 
     @Override
     public Receta guardar(Receta receta) {
-        // Guarda directamente en la tabla física de la Base de Datos
-        return jpaRepository.save(receta);
+        if (receta.getId() == null) {
+            receta.setId((int) (System.currentTimeMillis() % 100000)); 
+        }
+        dbMemoria.put(receta.getId(), receta);
+        return receta;
     }
 }

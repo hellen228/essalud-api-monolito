@@ -1,28 +1,61 @@
 package com.essalud.dominio.tratamiento.modelo;
 
-public class Receta {
-    private String id;
-    private String diagnosticoId;
-    private String medicamento;
-    private String estado; // "Pendiente"
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 
-    public Receta(String id, String diagnosticoId, String medicamento, String estado) {
-        this.id = id;
-        this.diagnosticoId = diagnosticoId;
-        this.medicamento = medicamento;
-        this.estado = estado;
+@Entity
+@Table(name = "prescripcion_receta") 
+public class Receta {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @Column(name = "id") 
+    private Integer id; 
+
+    @Column(name = "plan_terapeutico_id", nullable = false) 
+    private Integer planTerapeuticoId; 
+
+    @Column(name = "medicamento_id", nullable = false) 
+    private Integer medicamentoId; 
+
+    @Column(name = "dosis", nullable = false) 
+    private String dosis;
+
+    @Column(name = "frecuencia", nullable = false)
+    private String frecuencia;
+
+    @Column(name = "duracion", nullable = false)
+    private String duracion;
+
+    @Column(name = "estado_dispensacion")
+    private String estadoDispensacion;
+
+    public Receta() {
     }
 
     // Getters y Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public String getDiagnosticoId() { return diagnosticoId; }
-    public void setDiagnosticoId(String diagnosticoId) { this.diagnosticoId = diagnosticoId; }
+    public Integer getPlanTerapeuticoId() { return planTerapeuticoId; }
+    public void setPlanTerapeuticoId(Integer planTerapeuticoId) { this.planTerapeuticoId = planTerapeuticoId; }
 
-    public String getMedicamento() { return medicamento; }
-    public void setMedicamento(String medicamento) { this.medicamento = medicamento; }
+    public Integer getMedicamentoId() { return medicamentoId; }
+    public void setMedicamentoId(Integer medicamentoId) { this.medicamentoId = medicamentoId; }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public String getDosis() { return dosis; }
+    public void setDosis(String dosis) { this.dosis = dosis; }
+
+    public String getFrecuencia() { return frecuencia; }
+    public void setFrecuencia(String frecuencia) { this.frecuencia = frecuencia; }
+
+    public String getDuracion() { return duracion; }
+    public void setDuracion(String duracion) { this.duracion = duracion; }
+
+    public String getEstadoDispensacion() { return estadoDispensacion; }
+    public void setEstadoDispensacion(String estadoDispensacion) { this.estadoDispensacion = estadoDispensacion; }
 }
