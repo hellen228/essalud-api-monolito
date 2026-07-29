@@ -44,7 +44,7 @@ public class AdmisionServicioImpl implements IAdmisionServicio {
         }
 
         Admision nuevaAdmision = new Admision();
-        nuevaAdmision.setAseguradoId(asegurado.getId());
+        nuevaAdmision.setAseguradoId(asegurado.getId().intValue());
         nuevaAdmision.setTipoIngreso(dto.getTipoIngreso());
         nuevaAdmision.setFechaIngreso(LocalDateTime.now());
 
@@ -73,10 +73,10 @@ public class AdmisionServicioImpl implements IAdmisionServicio {
             throw new IllegalArgumentException("Tipo de ingreso no válido. Los valores permitidos son: 'Consulta Externa', 'Emergencia' o 'Hospitalizacion'.");
         }
 
-        historiaClinicaRepositorio.buscarPorAseguradoId(asegurado.getId())
+        historiaClinicaRepositorio.buscarPorAseguradoId(asegurado.getId().intValue())
                 .orElseGet(() -> {
                     HistoriaClinica nuevaHistoria = new HistoriaClinica();
-                    nuevaHistoria.setAseguradoId(asegurado.getId());
+                    nuevaHistoria.setAseguradoId(asegurado.getId().intValue());
                     return historiaClinicaRepositorio.guardar(nuevaHistoria);
                 });
 

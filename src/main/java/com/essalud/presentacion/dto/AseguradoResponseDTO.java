@@ -4,7 +4,6 @@ import com.essalud.dominio.asegurado.modelo.Asegurado;
 import com.essalud.dominio.asegurado.modelo.EstadoAfiliacion;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Schema(description = "Datos del asegurado")
 public class AseguradoResponseDTO {
@@ -30,12 +29,11 @@ public class AseguradoResponseDTO {
     @Schema(description = "Estado de afiliación", example = "ACTIVO")
     private EstadoAfiliacion estadoAfiliacion;
 
-    @Schema(description = "Fecha de afiliación", example = "2026-07-22T10:30:00")
-    private LocalDateTime fechaAfiliacion;
+    @Schema(description = "Fecha de afiliación", example = "2026-07-22")
+    private LocalDate fechaAfiliacion;
 
     public static AseguradoResponseDTO fromDomain(Asegurado asegurado) {
         AseguradoResponseDTO dto = new AseguradoResponseDTO();
-        dto.setId(asegurado.getId());
         dto.setDni(asegurado.getDni());
         dto.setNombres(asegurado.getNombres());
         dto.setApellidos(asegurado.getApellidos());
@@ -67,6 +65,6 @@ public class AseguradoResponseDTO {
     public EstadoAfiliacion getEstadoAfiliacion() { return estadoAfiliacion; }
     public void setEstadoAfiliacion(EstadoAfiliacion estadoAfiliacion) { this.estadoAfiliacion = estadoAfiliacion; }
 
-    public LocalDateTime getFechaAfiliacion() { return fechaAfiliacion; }
-    public void setFechaAfiliacion(LocalDateTime fechaAfiliacion) { this.fechaAfiliacion = fechaAfiliacion; }
+    public LocalDate getFechaAfiliacion() { return fechaAfiliacion; }
+    public void setFechaAfiliacion(LocalDate fechaAfiliacion) { this.fechaAfiliacion = fechaAfiliacion; }
 }

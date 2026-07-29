@@ -7,8 +7,21 @@ import java.util.Optional;
 
 public interface IAseguradoRepositorio {
     Asegurado save(Asegurado asegurado);
-    Optional<Asegurado> findById(Long id);
+    Optional<Asegurado> findById(String id);
     Optional<Asegurado> findByDni(String dni);
     List<Asegurado> findAll();
-    void deleteById(Long id);
+    void deleteById(String id);
+
+    default Optional<Asegurado> buscarPorId(String id) {
+        return findById(id);
+    }
+
+    default Optional<Asegurado> buscarPorId(Integer id) {
+        if (id == null) return Optional.empty();
+        return findById(id.toString());
+    }
+
+    default Optional<Asegurado> buscarPorDni(String dni) {
+        return findByDni(dni);
+    }
 }

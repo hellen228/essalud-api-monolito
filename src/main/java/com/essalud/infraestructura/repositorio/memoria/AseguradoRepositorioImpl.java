@@ -2,35 +2,6 @@ package com.essalud.infraestructura.repositorio.memoria;
 
 import com.essalud.dominio.asegurado.modelo.Asegurado;
 import com.essalud.dominio.asegurado.repositorio.IAseguradoRepositorio;
-<<<<<<< HEAD
-import org.springframework.stereotype.Repository;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-@Repository
-public class AseguradoRepositorioImpl implements IAseguradoRepositorio {
-    private final Map<Integer, Asegurado> aseguradosMock = new HashMap<>();
-
-    public AseguradoRepositorioImpl() {
-        // Datos falsos para probar el flujo de Bonita en Postman
-        aseguradosMock.put(1, new Asegurado(1, "72266171", true));  // Seguro Activo
-        aseguradosMock.put(2, new Asegurado(2, "70011122", false)); // Seguro Inactivo (Debe ser rechazado)
-    }
-
-    @Override
-    public Optional<Asegurado> buscarPorId(Integer id) {
-        return Optional.ofNullable(aseguradosMock.get(id));
-    }
-
-    @Override
-    public Optional<Asegurado> buscarPorDni(String dni) {
-        return aseguradosMock.values().stream()
-                .filter(a -> a.getDni().equals(dni))
-                .findFirst();
-    }
-}
-=======
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -44,20 +15,19 @@ import java.util.concurrent.atomic.AtomicLong;
 @Profile("test")
 public class AseguradoRepositorioImpl implements IAseguradoRepositorio {
 
-    private final ConcurrentHashMap<Long, Asegurado> almacen = new ConcurrentHashMap<>();
-    private final AtomicLong secuencia = new AtomicLong(1);
+    private final ConcurrentHashMap<String, Asegurado> almacen = new ConcurrentHashMap<>();
 
     @Override
     public Asegurado save(Asegurado asegurado) {
-        if (asegurado.getId() == null) {
-            asegurado.setId(secuencia.getAndIncrement());
+        if (asegurado.getDni() == null) {
+            throw new IllegalArgumentException("El asegurado debe tener un DNI");
         }
-        almacen.put(asegurado.getId(), asegurado);
+        almacen.put(asegurado.getDni(), asegurado);
         return asegurado;
     }
 
     @Override
-    public Optional<Asegurado> findById(Long id) {
+    public Optional<Asegurado> findById(String id) {
         return Optional.ofNullable(almacen.get(id));
     }
 
@@ -74,8 +44,8 @@ public class AseguradoRepositorioImpl implements IAseguradoRepositorio {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         almacen.remove(id);
     }
 }
->>>>>>> feature/asegurado-service
+    

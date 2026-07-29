@@ -2,7 +2,6 @@ package com.essalud.infraestructura.repositorio.jpa;
 
 import com.essalud.dominio.asegurado.modelo.Asegurado;
 import com.essalud.dominio.asegurado.repositorio.IAseguradoRepositorio;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Repository
-@Profile("dev")
 public class AseguradoJpaRepository implements IAseguradoRepositorio {
 
     private final AseguradoSpringJpaRepository springRepo;
@@ -27,7 +25,7 @@ public class AseguradoJpaRepository implements IAseguradoRepositorio {
     }
 
     @Override
-    public Optional<Asegurado> findById(Long id) {
+    public Optional<Asegurado> findById(String id) {
         return springRepo.findById(id).map(AseguradoEntity::toDomain);
     }
 
@@ -44,7 +42,7 @@ public class AseguradoJpaRepository implements IAseguradoRepositorio {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         springRepo.deleteById(id);
     }
 }

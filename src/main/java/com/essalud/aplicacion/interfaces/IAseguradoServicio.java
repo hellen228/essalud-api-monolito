@@ -18,5 +18,5 @@ public interface IAseguradoServicio {
     
     Asegurado obtenerDatosAsegurado(String dni);
 
-    Asegurado actualizarEstadoAfiliacion(Long idAsegurado, EstadoAfiliacion estado);
+    Asegurado actualizarEstadoAfiliacion(String dniAsegurado, EstadoAfiliacion estado);
 }

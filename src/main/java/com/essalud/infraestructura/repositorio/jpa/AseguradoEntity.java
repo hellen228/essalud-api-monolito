@@ -3,45 +3,47 @@ package com.essalud.infraestructura.repositorio.jpa;
 import com.essalud.dominio.asegurado.modelo.Asegurado;
 import com.essalud.dominio.asegurado.modelo.EstadoAfiliacion;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "asegurados")
 public class AseguradoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true, length = 8)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "dni", nullable = false, length = 8)
     private String dni;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "nombres", nullable = false, length = 100)
     private String nombres;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "seguro_activo", nullable = false)
+    private Boolean seguroActivo;
+
+    @Column(name = "apellidos", length = 100)
     private String apellidos;
 
-    @Column(name = "fecha_nacimiento", nullable = false)
+    @Column(name = "fechaNacimiento")
     private LocalDate fechaNacimiento;
 
-    @Column(nullable = false, length = 1)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "sexo", length = 1)
     private String sexo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_afiliacion", nullable = false)
+    @Column(name = "estadoAfiliacion", length = 50)
     private EstadoAfiliacion estadoAfiliacion;
 
-    @Column(name = "fecha_afiliacion", nullable = false)
-    private LocalDateTime fechaAfiliacion;
+    @Column(name = "fechaAfiliacion")
+    private LocalDate fechaAfiliacion;
 
     public AseguradoEntity() {
     }
 
     public static AseguradoEntity fromDomain(Asegurado asegurado) {
         AseguradoEntity entity = new AseguradoEntity();
-        entity.setId(asegurado.getId());
         entity.setDni(asegurado.getDni());
         entity.setNombres(asegurado.getNombres());
         entity.setApellidos(asegurado.getApellidos());
@@ -54,7 +56,6 @@ public class AseguradoEntity {
 
     public Asegurado toDomain() {
         Asegurado asegurado = new Asegurado();
-        asegurado.setId(this.id);
         asegurado.setDni(this.dni);
         asegurado.setNombres(this.nombres);
         asegurado.setApellidos(this.apellidos);
@@ -64,9 +65,6 @@ public class AseguradoEntity {
         asegurado.setFechaAfiliacion(this.fechaAfiliacion);
         return asegurado;
     }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public String getDni() { return dni; }
     public void setDni(String dni) { this.dni = dni; }
@@ -86,6 +84,6 @@ public class AseguradoEntity {
     public EstadoAfiliacion getEstadoAfiliacion() { return estadoAfiliacion; }
     public void setEstadoAfiliacion(EstadoAfiliacion estadoAfiliacion) { this.estadoAfiliacion = estadoAfiliacion; }
 
-    public LocalDateTime getFechaAfiliacion() { return fechaAfiliacion; }
-    public void setFechaAfiliacion(LocalDateTime fechaAfiliacion) { this.fechaAfiliacion = fechaAfiliacion; }
+    public LocalDate getFechaAfiliacion() { return fechaAfiliacion; }
+    public void setFechaAfiliacion(LocalDate fechaAfiliacion) { this.fechaAfiliacion = fechaAfiliacion; }
 }

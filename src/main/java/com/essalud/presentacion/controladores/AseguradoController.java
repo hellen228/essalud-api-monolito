@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/asegurados")
 @Tag(name = "Asegurado", description = "Operaciones de afiliación y gestión de asegurados")
 public class AseguradoController {
@@ -95,17 +96,17 @@ public class AseguradoController {
         return ResponseEntity.ok(AseguradoResponseDTO.fromDomain(asegurado));
     }
 
-    @PutMapping("/{id}/estado")
+    @PutMapping("/{dni}/estado")
     @Operation(summary = "Actualizar estado de afiliación")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Estado actualizado"),
             @ApiResponse(responseCode = "404", description = "Asegurado no encontrado")
     })
     public ResponseEntity<AseguradoResponseDTO> actualizarEstado(
-            @Parameter(description = "ID del asegurado", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "DNI del asegurado", example = "12345678")
+            @PathVariable String dni,
             @Valid @RequestBody ActualizarEstadoRequestDTO request) {
-        var asegurado = aseguradoServicio.actualizarEstadoAfiliacion(id, request.getEstado());
+        var asegurado = aseguradoServicio.actualizarEstadoAfiliacion(dni, request.getEstado());
         return ResponseEntity.ok(AseguradoResponseDTO.fromDomain(asegurado));
     }
 }

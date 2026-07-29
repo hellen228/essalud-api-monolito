@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AseguradoSpringJpaRepository extends CrudRepository<AseguradoEntity, Long> {
+public interface AseguradoSpringJpaRepository extends CrudRepository<AseguradoEntity, String> {
     Optional<AseguradoEntity> findByDni(String dni);
 }

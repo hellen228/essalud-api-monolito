@@ -87,10 +87,10 @@ public class AseguradoServicioImpl implements IAseguradoServicio {
      */
     @Override
     @Transactional
-    public Asegurado actualizarEstadoAfiliacion(Long idAsegurado, EstadoAfiliacion estado) {
-        Asegurado asegurado = aseguradoRepositorio.findById(idAsegurado)
+    public Asegurado actualizarEstadoAfiliacion(String dniAsegurado, EstadoAfiliacion estado) {
+        Asegurado asegurado = aseguradoRepositorio.findById(dniAsegurado)
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "No se encontró asegurado con id " + idAsegurado));
+                        "No se encontró asegurado con DNI " + dniAsegurado));
         asegurado.setEstadoAfiliacion(estado);
         return aseguradoRepositorio.save(asegurado);
     }

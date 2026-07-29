@@ -1,17 +1,15 @@
 package com.essalud.dominio.asegurado.modelo;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class Asegurado {
-    private Long id;
     private String dni;
     private String nombres;
     private String apellidos;
     private LocalDate fechaNacimiento;
     private String sexo;
     private EstadoAfiliacion estadoAfiliacion;
-    private LocalDateTime fechaAfiliacion;
+    private LocalDate fechaAfiliacion;
 
     public Asegurado() {
     }
@@ -24,11 +22,20 @@ public class Asegurado {
         this.fechaNacimiento = fechaNacimiento;
         this.sexo = sexo;
         this.estadoAfiliacion = EstadoAfiliacion.PENDIENTE;
-        this.fechaAfiliacion = LocalDateTime.now();
+        this.fechaAfiliacion = LocalDate.now();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Convenience helper for older code expecting a boolean insurance check
+    public boolean isSeguroActivo() {
+        return this.estadoAfiliacion == EstadoAfiliacion.ACTIVO;
+    }
+
+    public Long getId() {
+        if (this.dni == null) {
+            return null;
+        }
+        return Long.parseLong(this.dni);
+    }
 
     public String getDni() { return dni; }
     public void setDni(String dni) { this.dni = dni; }
@@ -48,6 +55,6 @@ public class Asegurado {
     public EstadoAfiliacion getEstadoAfiliacion() { return estadoAfiliacion; }
     public void setEstadoAfiliacion(EstadoAfiliacion estadoAfiliacion) { this.estadoAfiliacion = estadoAfiliacion; }
 
-    public LocalDateTime getFechaAfiliacion() { return fechaAfiliacion; }
-    public void setFechaAfiliacion(LocalDateTime fechaAfiliacion) { this.fechaAfiliacion = fechaAfiliacion; }
+    public LocalDate getFechaAfiliacion() { return fechaAfiliacion; }
+    public void setFechaAfiliacion(LocalDate fechaAfiliacion) { this.fechaAfiliacion = fechaAfiliacion; }
 }
