@@ -4,7 +4,9 @@ import com.essalud.dominio.farmacia.modelo.Medicamento;
 import com.essalud.dominio.farmacia.repositorio.IMedicamentoRepositorio;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,5 +24,10 @@ public class MedicamentoRepositorioImpl implements IMedicamentoRepositorio {
     @Override
     public Optional<Medicamento> buscarPorId(Integer idMedicamento) {
         return Optional.ofNullable(kardexMock.get(idMedicamento));
+    }
+
+    @Override
+    public List<Medicamento> listarTodos() {
+        return new ArrayList<>(kardexMock.values());
     }
 }

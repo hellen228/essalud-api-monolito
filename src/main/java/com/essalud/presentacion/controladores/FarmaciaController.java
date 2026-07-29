@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/farmacia")
 public class FarmaciaController {
 
@@ -39,4 +40,10 @@ public class FarmaciaController {
             return ResponseEntity.status(404).body(error);
         }
     }
+
+    @GetMapping("/medicamentos")
+    public ResponseEntity<?> listarMedicamentos() {
+        return ResponseEntity.ok(farmaciaServicio.listarMedicamentos());
+    }
+
 }
