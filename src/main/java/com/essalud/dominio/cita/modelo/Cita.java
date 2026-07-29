@@ -1,24 +1,89 @@
 package com.essalud.dominio.cita.modelo;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Cita {
-    private Integer id;
-    private Integer aseguradoId;
-    private Integer medicoId;
-    private LocalDateTime fechaHora;
-    private String estado;
 
-    public Cita() {}
+    private Integer idCita;
+    private String dniPaciente;
+    private String especialidad;
+    private LocalDate fechaCita;
+    private String horaCita;
+    private String estadoCita;
+    private Integer idHorario;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-    public Integer getAseguradoId() { return aseguradoId; }
-    public void setAseguradoId(Integer aseguradoId) { this.aseguradoId = aseguradoId; }
-    public Integer getMedicoId() { return medicoId; }
-    public void setMedicoId(Integer medicoId) { this.medicoId = medicoId; }
-    public LocalDateTime getFechaHora() { return fechaHora; }
-    public void setFechaHora(LocalDateTime fechaHora) { this.fechaHora = fechaHora; }
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public Cita() {
+    }
+
+    public Integer getIdCita() {
+        return idCita;
+    }
+
+    public void setIdCita(Integer idCita) {
+        this.idCita = idCita;
+    }
+
+    public Integer getId() {
+        return idCita;
+    }
+
+    public void setId(Integer id) {
+        this.idCita = id;
+    }
+
+    public String getDniPaciente() {
+        return dniPaciente;
+    }
+
+    public void setDniPaciente(String dniPaciente) {
+        this.dniPaciente = dniPaciente;
+    }
+
+    public String getEspecialidad() {
+        return especialidad;
+    }
+
+    public void setEspecialidad(String especialidad) {
+        this.especialidad = especialidad;
+    }
+
+    public LocalDate getFechaCita() {
+        return fechaCita;
+    }
+
+    public void setFechaCita(LocalDate fechaCita) {
+        this.fechaCita = fechaCita;
+    }
+
+    public String getHoraCita() {
+        return horaCita;
+    }
+
+    public void setHoraCita(String horaCita) {
+        this.horaCita = horaCita;
+    }
+
+    public String getEstadoCita() {
+        return estadoCita;
+    }
+
+    public void setEstadoCita(String estadoCita) {
+        this.estadoCita = estadoCita;
+    }
+
+    public String getEstado() {
+        return estadoCita;
+    }
+
+    public void setEstado(String estado) {
+        this.estadoCita = estado;
+    }
+
+    public Integer getIdHorario() {
+        return idHorario;
+    }
+
+    public void setIdHorario(Integer idHorario) {
+        this.idHorario = idHorario;
+    }
 }
