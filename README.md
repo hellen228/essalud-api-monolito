@@ -246,6 +246,7 @@ Cada subsistema sigue exactamente este mismo patrón de carpetas dentro de `domi
   <img width="1283" height="933" alt="imagen" src="https://github.com/user-attachments/assets/d8ae0cdb-2c73-4264-81e1-fd86bcbd4d44" />
 
 - **Calidad de código:** se recomienda correr un análisis estático (SonarLint/SonarQube) antes de cada PR a `desarrollo`, manteniendo severidad máxima *Minor/Info* para el puntaje máximo del rubro.
+<img width="1887" height="752" alt="sonar" src="https://github.com/user-attachments/assets/06fd5261-9168-4119-86c1-98a65a9aced3" />
 
 ---
 
