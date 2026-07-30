@@ -1,0 +1,372 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "EsSalud Diagnóstico - Acceptance Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "56797998"
+	},
+	"item": [
+		{
+			"name": "Diagnóstico Clínico",
+			"item": [
+				{
+					"name": "TC01 - Asignar Diagnóstico CIE-10",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD",
+									"// GIVEN: Una atención médica activa (idAtencion: 1)",
+									"// WHEN: Se asigna un diagnóstico CIE-10",
+									"// THEN: El sistema retorna 201 Created con el diagnóstico en estado ACTIVO",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - Código de estado HTTP es 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"THEN - Diagnóstico asignado con código CIE-10\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.codigoCie10).to.eql('J18.9');",
+									"    pm.expect(jsonData.estado).to.eql('ACTIVO');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idAtencion\": 1,\n  \"codigoCie10\": \"J18.9\",\n  \"descripcion\": \"Neumonía no especificada\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/diagnosticos",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"diagnosticos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC02 - Actualizar Estado de Enfermedad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD",
+									"// GIVEN: Un diagnóstico previamente asignado (id: 1)",
+									"// WHEN: Se actualiza el estado a RESUELTO",
+									"// THEN: El sistema retorna 200 OK con el nuevo estado",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - Código de estado HTTP es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"THEN - Estado actualizado a RESUELTO\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.estado).to.eql('RESUELTO');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"estado\": \"RESUELTO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/diagnosticos/1/estado",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"diagnosticos",
+								"1",
+								"estado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC03 - Listar Diagnósticos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD",
+									"// GIVEN: Diagnósticos registrados en el sistema",
+									"// WHEN: Se consulta el listado completo",
+									"// THEN: El sistema retorna 200 OK con un arreglo",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - Código de estado HTTP es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"THEN - Respuesta es un arreglo\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/diagnosticos",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"diagnosticos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Órdenes de Laboratorio",
+			"item": [
+				{
+					"name": "TC04 - Generar Orden de Laboratorio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD",
+									"// GIVEN: Una atención médica activa (idAtencion: 1)",
+									"// WHEN: Se solicita un examen de laboratorio",
+									"// THEN: El sistema crea la orden en estado SOLICITADO",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - Código de estado HTTP es 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"THEN - Orden creada en estado SOLICITADO\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.tipoExamen).to.eql('HEMATOLOGIA_COMPLETA');",
+									"    pm.expect(jsonData.estado).to.eql('SOLICITADO');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idAtencion\": 1,\n  \"tipoExamen\": \"HEMATOLOGIA_COMPLETA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/diagnosticos/ordenes-laboratorio",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"diagnosticos",
+								"ordenes-laboratorio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC05 - Generar Orden de Rayos X",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD",
+									"// GIVEN: Una atención médica activa (idAtencion: 1)",
+									"// WHEN: Se solicita una placa de Rayos X",
+									"// THEN: El sistema crea la orden con la zona corporal indicada",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - Código de estado HTTP es 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"THEN - Orden de Rayos X creada correctamente\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.zonaCuerpo).to.eql('TORAX_AP');",
+									"    pm.expect(jsonData.estado).to.eql('SOLICITADO');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idAtencion\": 1,\n  \"zonaCuerpo\": \"TORAX_AP\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/diagnosticos/ordenes-rayosx",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"diagnosticos",
+								"ordenes-rayosx"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC06 - Visualizar Resultados de Examen",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD",
+									"// GIVEN: Una orden de examen registrada",
+									"// WHEN: Se consultan los resultados por ID",
+									"// THEN: El sistema retorna 200 OK con el resultado",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - Código de estado HTTP es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"THEN - Respuesta contiene campo resultado\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('resultado');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{project_host}}/api/diagnosticos/ordenes/1/resultados",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"diagnosticos",
+								"ordenes",
+								"1",
+								"resultados"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
