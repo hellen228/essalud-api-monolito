@@ -2,11 +2,11 @@ package com.essalud.infraestructura.repositorio.memoria;
 
 import com.essalud.dominio.tratamiento.modelo.Receta;
 import com.essalud.dominio.tratamiento.repositorio.IRecetaRepositorio;
-
+import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 
-// Remueve o comenta @Repository para no usar memoria
+@Repository
 public class RecetaRepositorioImpl implements IRecetaRepositorio {
     
     private final Map<Integer, Receta> dbMemoria = new HashMap<>(); 
