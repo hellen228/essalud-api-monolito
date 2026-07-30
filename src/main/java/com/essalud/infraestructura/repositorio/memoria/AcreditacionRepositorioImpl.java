@@ -8,20 +8,23 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class AcreditacionRepositorioImpl implements IAcreditacionRepositorio {
 
+    private static final Set<Integer> ASEGURADOS_EXISTENTES = Set.of(1, 2);
     private final Map<Integer, Acreditacion> acreditaciones = new HashMap<>();
 
     @Override
     public Optional<Acreditacion> buscarPorIdAsegurado(Integer idAsegurado) {
-        return Optional.ofNullable(acreditaciones.get(idAsegurado))
-                .or(() -> {
-                    // Si no existe registro previo, se asume PENDIENTE
-                    Acreditacion nueva = new Acreditacion(idAsegurado, EstadoAcreditacion.PENDIENTE, null);
-                    return Optional.of(nueva);
-                });
+        if (acreditaciones.containsKey(idAsegurado)) {
+            return Optional.of(acreditaciones.get(idAsegurado));
+        }
+        if (ASEGURADOS_EXISTENTES.contains(idAsegurado)) {
+            return Optional.of(new Acreditacion(idAsegurado, EstadoAcreditacion.PENDIENTE, null));
+        }
+        return Optional.empty();
     }
 
     @Override
