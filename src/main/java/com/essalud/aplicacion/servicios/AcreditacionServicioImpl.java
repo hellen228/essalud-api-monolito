@@ -1,5 +1,7 @@
 package com.essalud.aplicacion.servicios;
 
+import com.essalud.dominio.acreditacion.repositorio.ICartaGarantiaRepositorio;
+import com.essalud.dominio.acreditacion.repositorio.IHistorialAportesRepositorio;
 import org.springframework.stereotype.Service;
 import com.essalud.dominio.acreditacion.modelo.Cobertura;
 import com.essalud.dominio.acreditacion.repositorio.ICoberturaRepositorio;
@@ -11,9 +13,15 @@ import java.util.Optional;
 public class AcreditacionServicioImpl implements IAcreditacionServicio {
 
     private final ICoberturaRepositorio coberturaRepositorio;
+    private final IHistorialAportesRepositorio historialAportesRepositorio;
+    private final ICartaGarantiaRepositorio cartaGarantiaRepositorio;
 
-    public AcreditacionServicioImpl(ICoberturaRepositorio coberturaRepositorio) {
+    public AcreditacionServicioImpl(ICoberturaRepositorio coberturaRepositorio,
+                                    IHistorialAportesRepositorio historialAportesRepositorio,
+                                    ICartaGarantiaRepositorio cartaGarantiaRepositorio) {
         this.coberturaRepositorio = coberturaRepositorio;
+        this.historialAportesRepositorio = historialAportesRepositorio;
+        this.cartaGarantiaRepositorio = cartaGarantiaRepositorio;
     }
 
     @Override
@@ -27,5 +35,15 @@ public class AcreditacionServicioImpl implements IAcreditacionServicio {
         boolean activo = cobertura.get().isEstado();
         String mensaje = activo ? "Cobertura vigente" : "Cobertura vencida o inactiva";
         return new CoberturaResponseDTO(dni, activo, mensaje);
+    }
+
+    @Override
+    public boolean verificarHistorialAportes(Integer idAsegurado) {
+        return historialAportesRepositorio.tieneAportesAlDia(idAsegurado);
+    }
+
+    @Override
+    public boolean auditarCartaGarantia(Integer idAsegurado) {
+        return cartaGarantiaRepositorio.tieneCartaGarantiaValida(idAsegurado);
     }
 }
