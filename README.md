@@ -73,6 +73,7 @@ La arquitectura combina **DDD** con **Arquitectura en Capas**, y cada dominio se
 
 ## 🔌 Diagrama de Composición de Servicios mediados por Procesos de Negocio
 
+![Uploading bonitex.png…]()
 
 
 ---
