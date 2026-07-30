@@ -178,3 +178,47 @@ La integración entre Bonita BPM, RabbitMQ y los servicios REST permite
 construir una solución modular y desacoplada, donde cada dominio
 mantiene su responsabilidad y se comunica mediante eventos y APIs
 documentadas.
+
+# 9. Code Smells
+
+Se siguieron patrones de Clean Code para evitar los smells como:
+``` text
+Codigo duplicado
+    │
+Nombres de variables descriptivos
+    │
+Comentarios adecuados
+    │
+Vulnerabilidades 
+```
+
+# 10. Testing
+
+Todos los endpoints fueron validados mediante PostMan
+
+
+# 11. Ejemplo de Proceso: Proceso de Dispensación de Medicamentos – EsSalud
+
+**Archivo:** `app/diagrams/FarmaciayDispensacion-1.0.proc`
+
+**Descripción:**
+Gestiona la entrega física de medicamentos al paciente desde la recepción de documentos en ventanilla hasta el cierre de la dispensación, actualizando el inventario en el sistema SIGES/SGH vía conector JDBC a PostgreSQL.
+
+**Actores / Lanes:**
+- **Paciente:** Entrega receta y DNI en ventanilla
+- **Técnico de Farmacia:** Recepción, picking (recolección), etiquetado y entrega
+- **Químico Farmacéutico:** Validación de acreditación, firma/sello, retención de receta
+- **Actor Quimico:** Auditoría de fármacos controlados
+- **Sistema SIGES / SGH:** Actualización automática del inventario
+
+**Flujo de tareas:**
+1. Entregar receta y DNI en ventanilla (`recepcionVentanilla`)
+2. Identificar al paciente *[automático]*
+3. Validar acreditación *[automático – conector JDBC PostgreSQL]* → conectorSeguro: verifica cobertura
+4. **[Gateway]** ¿Acreditación válida?
+   - **SÍ** → Consultar stock en kárdex electrónico *[automático – conectorStock]*
+     - **[Gateway]** ¿Hay Stock?
+       - **SÍ** → Validar firma, sello (`validacionConforme`) → Realizar picking (recolección) de medicamentos (`recoleccionMedicamentos`) → Etiquetar medicamentos (`etiquetarMedicamento`) → Dispensar medicamentos físicos → Registrar salida / Actualizar inventario (conectorUpdate + conectorSalida) → Recibir medicamentos (`entregaCierre`) → Dispensación exitosa / Proceso de atención finalizado
+       - **NO** → Sellar receta como PENDIENTE / Medicamento pendiente (`sinStock`)
+   - **NO** → Retener receta y notificar auditoría (`validacionDenegada`) → Informar motivo de rechazo (`atencionRechazada`) → Atención rechazada
+5. FIN
