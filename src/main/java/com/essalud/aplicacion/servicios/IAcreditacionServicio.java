@@ -9,4 +9,5 @@ public interface IAcreditacionServicio {
     void aprobarCoberturaPaciente(Integer idAsegurado);
     void rechazarCoberturaPaciente(Integer idAsegurado, String motivo);
     void notificarEstadoAcreditacion(Integer idAsegurado);
+    boolean consultarVigenciaSunat(String dni);
 }

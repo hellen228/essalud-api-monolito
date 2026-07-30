@@ -1,5 +1,6 @@
 package com.essalud.aplicacion.servicios;
 
+import com.essalud.dominio.acreditacion.adaptadores.ISunatServiceAdapter;
 import com.essalud.dominio.acreditacion.excepcion.AseguradoNoAcreditadoException;
 import com.essalud.dominio.acreditacion.modelo.Acreditacion;
 import com.essalud.dominio.acreditacion.modelo.EstadoAcreditacion;
@@ -21,17 +22,20 @@ public class AcreditacionServicioImpl implements IAcreditacionServicio {
     private final ICoberturaRepositorio coberturaRepositorio;
     private final IHistorialAportesRepositorio historialAportesRepositorio;
     private final ICartaGarantiaRepositorio cartaGarantiaRepositorio;
-    Logger logger = Logger.getLogger(getClass().getName());
     private final IAcreditacionRepositorio acreditacionRepositorio;
+    private final ISunatServiceAdapter sunatServiceAdapter;
+    Logger logger = Logger.getLogger(getClass().getName());
 
     public AcreditacionServicioImpl(ICoberturaRepositorio coberturaRepositorio,
                                     IHistorialAportesRepositorio historialAportesRepositorio,
                                     ICartaGarantiaRepositorio cartaGarantiaRepositorio,
-                                    IAcreditacionRepositorio acreditacionRepositorio) {
+                                    IAcreditacionRepositorio acreditacionRepositorio,
+                                    ISunatServiceAdapter sunatServiceAdapter) {
         this.coberturaRepositorio = coberturaRepositorio;
         this.historialAportesRepositorio = historialAportesRepositorio;
         this.cartaGarantiaRepositorio = cartaGarantiaRepositorio;
         this.acreditacionRepositorio = acreditacionRepositorio;
+        this.sunatServiceAdapter = sunatServiceAdapter;
     }
 
     @Override
@@ -86,5 +90,9 @@ public class AcreditacionServicioImpl implements IAcreditacionServicio {
                 acreditacion.getEstado(),
                 acreditacion.getMotivoRechazo() != null ? " (Motivo: " + acreditacion.getMotivoRechazo() + ")" : ""
         });
+    }
+    @Override
+    public boolean consultarVigenciaSunat(String dni) {
+        return sunatServiceAdapter.consultarVigenciaSunat(dni);
     }
 }
