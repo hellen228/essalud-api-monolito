@@ -6,4 +6,7 @@ public interface IAcreditacionServicio {
     CoberturaResponseDTO validarCobertura(String dni);
     boolean verificarHistorialAportes(Integer idAsegurado);
     boolean auditarCartaGarantia(Integer idAsegurado);
+    void aprobarCoberturaPaciente(Integer idAsegurado);
+    void rechazarCoberturaPaciente(Integer idAsegurado, String motivo);
+    void notificarEstadoAcreditacion(Integer idAsegurado);
 }
