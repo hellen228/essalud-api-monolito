@@ -1,0 +1,410 @@
+{
+  "info": {
+    "_postman_id": "a1c4e2d0-3f6b-4a1c-9e2d-acreditacion0005",
+    "name": "EsSalud - AcreditacionService BDD Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auditar Acreditacion Feature",
+      "item": [
+        {
+          "name": "TC01 - Consultar cobertura con DNI activo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: VALIDAR COBERTURA (DNI ACTIVO)",
+                  "// =====================================================================",
+                  "// GIVEN: Un asegurado con DNI 72266171 y cobertura vigente registrada",
+                  "// WHEN: Se consulta GET /api/acreditacion/{dni}",
+                  "// THEN: El sistema responde HTTP 200 con seguroActivo = true",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"THEN - La cobertura aparece activa con el mensaje correcto\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.dni).to.eql(\"72266171\");",
+                  "    pm.expect(jsonData.seguroActivo).to.eql(true);",
+                  "    pm.expect(jsonData.mensaje).to.eql(\"Cobertura vigente\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/72266171",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "72266171"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC02 - Consultar cobertura con DNI inactivo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: VALIDAR COBERTURA (DNI INACTIVO)",
+                  "// =====================================================================",
+                  "// GIVEN: Un asegurado con DNI 70011122 y cobertura vencida",
+                  "// WHEN: Se consulta GET /api/acreditacion/{dni}",
+                  "// THEN: El sistema responde HTTP 200 con seguroActivo = false",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"THEN - La cobertura aparece inactiva con el mensaje correcto\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.seguroActivo).to.eql(false);",
+                  "    pm.expect(jsonData.mensaje).to.eql(\"Cobertura vencida o inactiva\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/70011122",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "70011122"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC03 - Consultar cobertura con DNI inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: VALIDAR COBERTURA (DNI NO REGISTRADO)",
+                  "// =====================================================================",
+                  "// GIVEN: Un DNI que no existe en el repositorio de coberturas",
+                  "// WHEN: Se consulta GET /api/acreditacion/{dni}",
+                  "// THEN: El sistema responde HTTP 200 indicando asegurado no encontrado",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"THEN - Se indica que el asegurado no fue encontrado\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.seguroActivo).to.eql(false);",
+                  "    pm.expect(jsonData.mensaje).to.eql(\"Asegurado no encontrado\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/00000000",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "00000000"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC04 - Consultar vigencia SUNAT vigente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: CONSULTAR VIGENCIA SUNAT",
+                  "// =====================================================================",
+                  "// GIVEN: Un DNI/RUC vigente y habido según el mock de SunatServiceAdapter",
+                  "// WHEN: Se consulta GET /api/acreditacion/{dni}/vigencia-sunat",
+                  "// THEN: El sistema responde HTTP 200 con true",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"THEN - SUNAT confirma la vigencia\", function () {",
+                  "    pm.expect(pm.response.json()).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/20100070970/vigencia-sunat",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "20100070970", "vigencia-sunat"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC05 - Verificar historial de aportes al dia",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: VERIFICAR HISTORIAL DE APORTES",
+                  "// =====================================================================",
+                  "// GIVEN: Un asegurado (idAsegurado: 1) con aportes al día",
+                  "// WHEN: Se consulta GET /api/acreditacion/{idAsegurado}/aportes",
+                  "// THEN: El sistema responde HTTP 200 con true",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"THEN - El asegurado tiene aportes al día\", function () {",
+                  "    pm.expect(pm.response.json()).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/1/aportes",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "1", "aportes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC06 - Auditar carta de garantia valida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: AUDITAR CARTA DE GARANTÍA",
+                  "// =====================================================================",
+                  "// GIVEN: Un asegurado (idAsegurado: 1) con carta de garantía vigente",
+                  "// WHEN: Se consulta GET /api/acreditacion/{idAsegurado}/carta-garantia",
+                  "// THEN: El sistema responde HTTP 200 con true",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"THEN - La carta de garantía es válida\", function () {",
+                  "    pm.expect(pm.response.json()).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/1/carta-garantia",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "1", "carta-garantia"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Gestionar Autorizacion de Atencion Feature",
+      "item": [
+        {
+          "name": "TC07 - Aprobar cobertura de paciente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: APROBAR COBERTURA DE PACIENTE",
+                  "// =====================================================================",
+                  "// GIVEN: Un asegurado existente (idAsegurado: 1) con acreditación pendiente",
+                  "// WHEN: Se envía PUT /api/acreditacion/{idAsegurado}/aprobar",
+                  "// THEN: El sistema responde HTTP 200, marcando la cobertura como aprobada",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/1/aprobar",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "1", "aprobar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC08 - Rechazar cobertura de paciente con motivo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: RECHAZAR COBERTURA DE PACIENTE",
+                  "// =====================================================================",
+                  "// GIVEN: Un asegurado existente (idAsegurado: 2) sin cobertura vigente",
+                  "// WHEN: Se envía PUT /api/acreditacion/{idAsegurado}/rechazar con un motivo",
+                  "// THEN: El sistema responde HTTP 200, marcando la cobertura como rechazada",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo\": \"Cobertura vencida\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/2/rechazar",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "2", "rechazar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC09 - Notificar estado de acreditacion",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: NOTIFICAR ESTADO DE ACREDITACIÓN",
+                  "// =====================================================================",
+                  "// GIVEN: Un asegurado existente (idAsegurado: 1) con estado de acreditación registrado",
+                  "// WHEN: Se envía POST /api/acreditacion/{idAsegurado}/notificar",
+                  "// THEN: El sistema responde HTTP 200, confirmando el envío de la notificación",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/1/notificar",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "1", "notificar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC10 - Rechazo por asegurado inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// =====================================================================",
+                  "// PRUEBA DE ACEPTACIÓN BDD - CASO DE USO: ASEGURADO NO ACREDITADO",
+                  "// =====================================================================",
+                  "// GIVEN: Un idAsegurado que no existe en el sistema (999)",
+                  "// WHEN: Se envía PUT /api/acreditacion/{idAsegurado}/aprobar",
+                  "// THEN: El sistema responde HTTP 404 indicando que el asegurado no fue acreditado",
+                  "// =====================================================================",
+                  "",
+                  "pm.test(\"THEN - El código de estado HTTP es 404 (Not Found)\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"THEN - El mensaje de error menciona el idAsegurado\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.error).to.include(\"999\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{project_host}}/api/acreditacion/999/aprobar",
+              "host": ["{{project_host}}"],
+              "path": ["api", "acreditacion", "999", "aprobar"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

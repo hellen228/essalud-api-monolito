@@ -26,6 +26,11 @@ public class AcreditacionController {
         return ResponseEntity.ok(respuesta);
     }
 
+    @GetMapping("/{dni}/vigencia-sunat")
+    public ResponseEntity<Boolean> consultarVigenciaSunat(@PathVariable String dni) {
+        return ResponseEntity.ok(acreditacionServicio.consultarVigenciaSunat(dni));
+    }
+
     @GetMapping("/{idAsegurado}/aportes")
     public ResponseEntity<Boolean> verificarHistorialAportes(@PathVariable Integer idAsegurado) {
         return ResponseEntity.ok(acreditacionServicio.verificarHistorialAportes(idAsegurado));
