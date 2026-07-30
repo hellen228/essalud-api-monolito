@@ -195,7 +195,21 @@ Vulnerabilidades
 # 10. Testing
 
 Todos los endpoints fueron validados mediante PostMan
+<img width="1600" height="867" alt="image" src="https://github.com/user-attachments/assets/16cb25ca-42ae-4050-ab39-180adced0e81" />
+<img width="1600" height="867" alt="image" src="https://github.com/user-attachments/assets/76c21620-71de-445b-a7b6-c7cff37ab090" />
+<img width="1600" height="867" alt="image" src="https://github.com/user-attachments/assets/2997a9fa-5465-492c-a09b-58ed2337c0e7" />
 
+
+# 11. Swagger
+
+<img width="1446" height="778" alt="image" src="https://github.com/user-attachments/assets/b4d1f9b8-4fdb-4c7d-8b4c-88875257233c" />
+<img width="1449" height="1007" alt="image" src="https://github.com/user-attachments/assets/2aed4a4d-287f-4c57-b87b-503d35b0c8b1" />
+<img width="1318" height="1051" alt="image" src="https://github.com/user-attachments/assets/7de8f29f-6d1b-4eff-bd17-6ef0b241d97b" />
+
+# 12. Conexión con RabbitMQ
+
+<img width="1242" height="747" alt="image" src="https://github.com/user-attachments/assets/1f5a9709-e7b0-4e2f-9179-a201a356fe71" />
+<img width="1215" height="751" alt="image" src="https://github.com/user-attachments/assets/bfdbaf01-786c-4659-a3fd-7518342a0315" />
 
 # 11. Ejemplo de Proceso: Proceso de Dispensación de Medicamentos – EsSalud
 
