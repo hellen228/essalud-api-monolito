@@ -30,6 +30,13 @@ public class DiagnosticoRepositorioImpl implements IDiagnosticoRepositorio {
     }
 
     @Override
+    public List<Diagnostico> buscarPorAtencion(Long idAtencion) {
+        return almacen.values().stream()
+                .filter(d -> d.getIdAtencion().equals(idAtencion))
+                .toList();
+    }
+
+    @Override
     public List<Diagnostico> listarTodos() {
         return new ArrayList<>(almacen.values());
     }

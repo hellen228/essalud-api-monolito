@@ -10,5 +10,7 @@ public interface IDiagnosticoRepositorio {
 
     Optional<Diagnostico> buscarPorId(Long id);
 
+    List<Diagnostico> buscarPorAtencion(Long idAtencion);
+
     List<Diagnostico> listarTodos();
 }
