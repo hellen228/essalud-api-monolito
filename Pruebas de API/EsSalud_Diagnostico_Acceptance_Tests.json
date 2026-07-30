@@ -1,0 +1,145 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "EsSalud Diagnóstico - Acceptance Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "56797998"
+	},
+	"item": [
+		{
+			"name": "Diagnóstico Feature",
+			"item": [
+				{
+					"name": "TC01 - Publicar evento de diagnóstico en RabbitMQ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD - PUBLICAR EVENTO EN RABBITMQ",
+									"// =====================================================================",
+									"// GIVEN: Un médico asigna un diagnóstico CIE-10 a una atención médica",
+									"// WHEN: Se envía el evento de diagnóstico al endpoint /api/diagnosticos/test",
+									"// THEN: El sistema publica el mensaje en RabbitMQ y retorna HTTP 200 OK",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"THEN - La respuesta confirma la publicación en RabbitMQ\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('mensaje');",
+									"    pm.expect(jsonData.mensaje).to.include('RabbitMQ');",
+									"});",
+									"",
+									"pm.test(\"THEN - El tiempo de respuesta es menor a 2 segundos\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tipo\": \"DIAGNOSTICO\",\n  \"codigoCie10\": \"J18.9\",\n  \"descripcion\": \"Neumonía no especificada\",\n  \"idAtencion\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/diagnosticos/test",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"diagnosticos",
+								"test"
+							]
+						},
+						"description": "Publica un evento de diagnóstico en RabbitMQ para probar la integración con el bus de mensajes."
+					},
+					"response": []
+				},
+				{
+					"name": "TC02 - Publicar evento con diferentes datos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// =====================================================================",
+									"// PRUEBA DE ACEPTACIÓN BDD - EVENTO CON DIFERENTES DATOS",
+									"// =====================================================================",
+									"// GIVEN: Se requiere enviar un evento con datos de laboratorio",
+									"// WHEN: Se envía el POST con datos de tipo EXAMEN",
+									"// THEN: El sistema publica el mensaje correctamente",
+									"// =====================================================================",
+									"",
+									"pm.test(\"THEN - El código de estado HTTP es 200 (OK)\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"THEN - El mensaje de confirmación es correcto\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.mensaje).to.eql('Evento publicado en RabbitMQ');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tipo\": \"EXAMEN\",\n  \"tipoExamen\": \"HEMATOLOGIA_COMPLETA\",\n  \"idAtencion\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{project_host}}/api/diagnosticos/test",
+							"host": [
+								"{{project_host}}"
+							],
+							"path": [
+								"api",
+								"diagnosticos",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
